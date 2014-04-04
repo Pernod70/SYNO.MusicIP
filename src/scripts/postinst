@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# NON-PRIVILEGED USER TO RUN MUSICMAGICSERVER.
+USER=musicip
+
+# PATH TO LOGFILE
+LOGFILE="/var/services/homes/musicip/.MusicMagic/log.txt"
+
+synouser --get $USER
+if [ $? -ne 0 ]
+then
+    # Create user with random password
+    synouser --add $USER `uuidgen | cut -c-8` 'MusicIP User' '' '' ''
+fi
+
+# Move MusicMagicMixer up one level
+mv ${SYNOPKG_PKGDEST}/MusicIP/MusicMagicMixer ${SYNOPKG_PKGDEST}/MusicMagicMixer
+rmdir ${SYNOPKG_PKGDEST}/MusicIP
+
+# Correct the files ownership
+chown -R $USER:users $SYNOPKG_PKGDEST
+
+echo `date +%c` "Installed MusicMagicServer" >> $LOGFILE
+echo `date +%c` "Allow port 10002 in firewall to access the server configuration page" >> $LOGFILE
+
+exit 0

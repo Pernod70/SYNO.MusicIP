@@ -1,0 +1,59 @@
+#!/bin/sh
+
+# NON-PRIVILEGED USER TO RUN MUSICMAGICSERVER.
+USER=musicip
+
+# PATH TO THE MUSICMAGICMIXERSERVER
+export MUSICHOME="${SYNOPKG_PKGDEST}/MusicMagicMixer/"
+
+# PATH TO LOGFILE
+LOGFILE="/var/services/homes/musicip/.MusicMagic/log.txt"
+
+start_mip ()
+{
+    # Launch the server in the background.
+    su - $USER -s /bin/sh -c $MUSICHOME"MusicMagicServer start & > /dev/null"
+}
+
+stop_mip ()
+{
+    # Stop the server in the background.
+    su - $USER -s /bin/sh -c $MUSICHOME"MusicMagicServer stop & > /dev/null"
+}
+
+mip_status ()
+{
+    if [ -f ${PID_FILE} ] && [ -d /proc/`cat ${PID_FILE}` ]; then
+        return 0
+    fi
+    return 1
+}
+
+case $1 in
+    start)
+	    echo `date +%c` "Started MusicMagicServer" >> $LOGFILE
+        start_mip
+		echo "Running MusicMagicServer"
+        exit 0
+        ;;
+    stop)
+	    echo `date +%c` "Stopped MusicMagicServer" >> $LOGFILE
+        stop_mip
+		echo "Stopped MusicMagicServer"
+        exit 0
+        ;;
+    status)
+        exit 0
+        ;;
+
+    log)
+	    if [ -f $LOGFILE ];
+		then
+           echo $LOGFILE
+		fi
+        exit 0
+        ;;
+    *)
+        exit 1
+        ;;
+esac

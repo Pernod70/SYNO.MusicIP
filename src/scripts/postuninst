@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# PATH TO LOGFILE
+LOGFILE="/var/services/homes/musicip/.MusicMagic/log.txt"
+
+echo `date +%c` "Uninstalled MusicMagicServer" >> $LOGFILE
+
+exit 0
