@@ -6,6 +6,9 @@ USER=musicip
 # PATH TO LOGFILE
 LOGFILE="/var/services/homes/musicip/.MusicMagic/log.txt"
 
+# SYNOLOGY SERVICE TOOL
+SERVICETOOL="/usr/syno/bin/servicetool"
+
 synouser --get $USER
 if [ $? -ne 0 ]
 then
@@ -13,14 +16,30 @@ then
     synouser --add $USER `uuidgen | cut -c-8` 'MusicIP User' '' '' ''
 fi
 
-# Move MusicMagicMixer up one level
-mv ${SYNOPKG_PKGDEST}/MusicIP/MusicMagicMixer ${SYNOPKG_PKGDEST}/MusicMagicMixer
-rmdir ${SYNOPKG_PKGDEST}/MusicIP
-
 # Correct the files ownership
 chown -R $USER:users $SYNOPKG_PKGDEST
 
+# Prepare config folder
+PKG_USERCONF_DIR="/var/services/homes/musicip/.MusicMagic"
+if [ ! -d ${PKG_USERCONF_DIR} ]; then
+	mkdir -p ${PKG_USERCONF_DIR}
+fi
+# Create logfile
+if [ ! -e ${LOGFILE} ]; then
+	touch ${LOGFILE}
+fi
+# Copy default settings
+if [ ! -e ${PKG_USERCONF_DIR}/mmm.ini ]; then
+	cp ${SYNOPKG_PKGDEST}/MusicMagicMixer/mmm.ini ${PKG_USERCONF_DIR}
+fi
+
+# Correct the config files ownership
+chown -R $USER:users $PKG_USERCONF_DIR
+
 echo `date +%c` "Installed MusicMagicServer" >> $LOGFILE
 echo `date +%c` "Allow port 10002 in firewall to access the server configuration page" >> $LOGFILE
+
+# Add port-forwarding config file
+${SERVICETOOL} --install-configure-file --package ${SYNOPKG_PKGDEST}/MusicMagicMixer/etc/musicip_port
 
 exit 0

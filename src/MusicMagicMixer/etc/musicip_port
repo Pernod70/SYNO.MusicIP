@@ -1,0 +1,7 @@
+[musicip_tcp]
+title="MusicIP Server"
+title_key="MusicIP Server"
+desc="MusicIP Server"
+desc_key="MusicIP Server"
+port_forward="no"
+dst.ports="10002/tcp"
