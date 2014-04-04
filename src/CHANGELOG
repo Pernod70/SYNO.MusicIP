@@ -1,0 +1,13 @@
+#--------MusicIP SPK ChangeLog
+#--------Package maintained by Nigel Barnes
+
+#--------This log only shows the changes of the spk versions. 
+
+muiscip1.8-002
+o Install will create ~/.MusicMagic
+o Default mmm.ini (with cache setting) is copied to ~/.MusicMagic folder
+o Added MusicIP Server as built-in application firewall rule
+o Enhanced interface index.html from www.spicefly.com 
+
+muiscip1.8-001 (x86 only)
+o Initial release

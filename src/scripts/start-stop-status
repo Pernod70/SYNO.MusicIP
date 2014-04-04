@@ -12,13 +12,13 @@ LOGFILE="/var/services/homes/musicip/.MusicMagic/log.txt"
 start_mip ()
 {
     # Launch the server in the background.
-    su - $USER -s /bin/sh -c $MUSICHOME"MusicMagicServer start & > /dev/null"
+    su - $USER -s /bin/sh -c $MUSICHOME"MusicMagicServer -verbose start & >> $LOGFILE"
 }
 
 stop_mip ()
 {
     # Stop the server in the background.
-    su - $USER -s /bin/sh -c $MUSICHOME"MusicMagicServer stop & > /dev/null"
+    su - $USER -s /bin/sh -c $MUSICHOME"MusicMagicServer stop & >> $LOGFILE"
 }
 
 mip_status ()
